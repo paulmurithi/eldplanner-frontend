@@ -1,10 +1,8 @@
-// src/components/MapView.js
 import React, { useMemo, useRef, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Polyline, Tooltip, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-/* --- Fix marker icon issue --- */
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
     iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
@@ -22,7 +20,6 @@ function getEventPosition(event, coords, tripDurationHours) {
     return [lat, lon];
 }
 
-// helper component to fit bounds
 function FitBounds({ coords }) {
     const map = useMap();
     useEffect(() => {
@@ -41,10 +38,8 @@ export default function MapView({ routeGeoJson, logs }) {
         const coords = routeGeoJson.coordinates;
         const startPos = [coords[0][1], coords[0][0]];
 
-        // flatten all events
         const allEvents = logs?.days?.flatMap((d) => d.events) || [];
 
-        // calculate total trip duration (end of last event)
         const tripDurationHours = Math.max(...allEvents.map((e) => e.start + e.duration), 1);
 
         return { coords, startPos, events: allEvents, tripDurationHours };
@@ -71,7 +66,6 @@ export default function MapView({ routeGeoJson, logs }) {
                     <Tooltip direction="top" offset={[0, -10]} opacity={1}>Start</Tooltip>
                 </Marker>
 
-                {/* Event markers (skip drive events) */}
                 {events
                     .filter((ev) => ev.type !== "drive")
                     .map((ev, idx) => {
